@@ -1,13 +1,14 @@
 package com.stanley.xie.learningspringboot.api;
 
+import com.stanley.xie.learningspringboot.dto.HotelGuest;
 import com.stanley.xie.learningspringboot.dto.RoomReservation;
+import com.stanley.xie.learningspringboot.model.Room;
+import com.stanley.xie.learningspringboot.service.GuestService;
 import com.stanley.xie.learningspringboot.service.ReservationService;
 import com.stanley.xie.learningspringboot.util.DateUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -18,10 +19,27 @@ import java.util.List;
 public class WebserviceController {
     private final DateUtils dateUtils;
     private final ReservationService reservationService;
+    private final GuestService guestService;
 
     @GetMapping("/reservations")
     public List<RoomReservation> getReservations(@RequestParam(value = "date", required = false) String dateString) {
         Date date = dateUtils.createDateFromDateString(dateString);
         return reservationService.getRoomReservationsForDate(date);
+    }
+
+    @GetMapping("/guests")
+    public List<HotelGuest> getGuests() {
+        return guestService.getHotelGuest();
+    }
+
+    @PostMapping("/guests")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addGuest(@RequestBody HotelGuest hotelGuest) {
+        guestService.addHotelGuest(hotelGuest);
+    }
+
+    @GetMapping("/rooms")
+    public List<Room> getRooms() {
+        return reservationService.getRooms();
     }
 }

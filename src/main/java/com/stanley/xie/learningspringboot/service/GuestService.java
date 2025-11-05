@@ -19,12 +19,21 @@ public class GuestService {
 
         Iterable<Guest> guests = guestRepository.findAll();
         guests.forEach(guest -> {
-            HotelGuest hotelGuest = new HotelGuest(guest.getLastName(), guest.getFirstName(), guest.getAddress(), guest.getPhoneNumber());
+            HotelGuest hotelGuest = new HotelGuest(guest.getLastName(), guest.getFirstName(), guest.getEmailAddress(), guest.getPhoneNumber());
             hotelGuests.add(hotelGuest);
         });
         sortHotelGuests(hotelGuests);
 
         return hotelGuests;
+    }
+
+    public void addHotelGuest(HotelGuest hotelGuest) {
+        Guest guest = new Guest();
+        guest.setFirstName(hotelGuest.getFirstName());
+        guest.setLastName(hotelGuest.getLastName());
+        guest.setEmailAddress(hotelGuest.getEmailAddress());
+        guest.setPhoneNumber(hotelGuest.getPhoneNumber());
+        guestRepository.save(guest);
     }
 
     private void sortHotelGuests(List<HotelGuest> hotelGuests) {
