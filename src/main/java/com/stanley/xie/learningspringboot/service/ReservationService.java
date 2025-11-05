@@ -22,6 +22,19 @@ public class ReservationService {
 
     public List<RoomReservation> getRoomReservationsForDate(Date date) {
         Iterable<Room> rooms = this.roomRepository.findAll();
+
+        Map<Long, RoomReservation> roomReservationMap = constructRoomReservationMap(rooms);
+
+        Iterable<Reservation> reservations = this.reservationRepository.findReservationByReservationDate(new java.sql.Date(date.getTime()));
+        updateRoomReservationMap(roomReservationMap, reservations, date);
+
+        List<RoomReservation> roomReservations = convertToRoomReservationList(roomReservationMap);
+        sortRoomReservations(roomReservations);
+
+        return roomReservations;
+    }
+
+    private Map<Long, RoomReservation> constructRoomReservationMap(Iterable<Room> rooms) {
         Map<Long, RoomReservation> roomReservationMap = new HashMap();
         rooms.forEach(room -> {
             RoomReservation roomReservation = new RoomReservation();
@@ -30,7 +43,11 @@ public class ReservationService {
             roomReservation.setRoomNumber(room.getRoomNumber());
             roomReservationMap.put(room.getId(), roomReservation);
         });
-        Iterable<Reservation> reservations = this.reservationRepository.findReservationByReservationDate(new java.sql.Date(date.getTime()));
+
+        return roomReservationMap;
+    }
+
+    private void updateRoomReservationMap(Map<Long, RoomReservation> roomReservationMap, Iterable<Reservation> reservations, Date date) {
         reservations.forEach(reservation -> {
             RoomReservation roomReservation = roomReservationMap.get(reservation.getRoomId());
             roomReservation.setDate(date);
@@ -39,17 +56,24 @@ public class ReservationService {
             roomReservation.setLastName(guest.getLastName());
             roomReservation.setGuestId(guest.getId());
         });
+    }
+
+    private List<RoomReservation> convertToRoomReservationList(Map<Long, RoomReservation> roomReservationMap) {
         List<RoomReservation> roomReservations = new ArrayList<>();
         for (Long id : roomReservationMap.keySet()) {
             roomReservations.add(roomReservationMap.get(id));
         }
+
+        return roomReservations;
+    }
+
+    private void sortRoomReservations(List<RoomReservation> roomReservations) {
         roomReservations.sort((o1, o2) -> {
             if (o1.getRoomName().equals(o2.getRoomName())) {
                 return o1.getRoomNumber().compareTo(o2.getRoomNumber());
             }
             return o1.getRoomName().compareTo(o2.getRoomName());
         });
-        return roomReservations;
     }
 }
 
