@@ -3,27 +3,25 @@ package com.stanley.xie.learningspringboot.service;
 import com.stanley.xie.learningspringboot.dto.RoomReservation;
 import com.stanley.xie.learningspringboot.model.Guest;
 import com.stanley.xie.learningspringboot.model.Reservation;
-import com.stanley.xie.learningspringboot.model.Room;
-import com.stanley.xie.learningspringboot.repository.GuestRepository;
 import com.stanley.xie.learningspringboot.repository.ReservationRepository;
-import com.stanley.xie.learningspringboot.repository.RoomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class ReservationService {
 
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
     private final GuestService guestService;
     private final ReservationRepository reservationRepository;
 
     public List<RoomReservation> getRoomReservationsForDate(Date date) {
-        Iterable<Room> rooms = this.roomRepository.findAll();
-
-        Map<Long, RoomReservation> roomReservationMap = constructRoomReservationMap(rooms);
+        Map<Long, RoomReservation> roomReservationMap = roomService.getRoomReservationMap();
 
         Iterable<Reservation> reservations = this.reservationRepository.findReservationByReservationDate(new java.sql.Date(date.getTime()));
         updateRoomReservationMap(roomReservationMap, reservations, date);
@@ -32,19 +30,6 @@ public class ReservationService {
         sortRoomReservations(roomReservations);
 
         return roomReservations;
-    }
-
-    private Map<Long, RoomReservation> constructRoomReservationMap(Iterable<Room> rooms) {
-        Map<Long, RoomReservation> roomReservationMap = new HashMap<>();
-        rooms.forEach(room -> {
-            RoomReservation roomReservation = new RoomReservation();
-            roomReservation.setRoomId(room.getId());
-            roomReservation.setRoomName(room.getName());
-            roomReservation.setRoomNumber(room.getRoomNumber());
-            roomReservationMap.put(room.getId(), roomReservation);
-        });
-
-        return roomReservationMap;
     }
 
     private void updateRoomReservationMap(Map<Long, RoomReservation> roomReservationMap, Iterable<Reservation> reservations, Date date) {
