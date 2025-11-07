@@ -5,6 +5,7 @@ import com.stanley.xie.learningspringboot.dto.RoomReservation;
 import com.stanley.xie.learningspringboot.model.Room;
 import com.stanley.xie.learningspringboot.service.GuestService;
 import com.stanley.xie.learningspringboot.service.ReservationService;
+import com.stanley.xie.learningspringboot.service.RoomService;
 import com.stanley.xie.learningspringboot.util.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class WebserviceController {
     private final DateUtils dateUtils;
     private final ReservationService reservationService;
     private final GuestService guestService;
+    private final RoomService roomService;
 
     @GetMapping("/reservations")
     public List<RoomReservation> getReservations(@RequestParam(value = "date", required = false) String dateString) {
@@ -40,6 +42,6 @@ public class WebserviceController {
 
     @GetMapping("/rooms")
     public List<Room> getRooms() {
-        return reservationService.getRooms();
+        return roomService.getRooms();
     }
 }

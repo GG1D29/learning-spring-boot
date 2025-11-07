@@ -34,19 +34,6 @@ public class ReservationService {
         return roomReservations;
     }
 
-    public List<Room> getRooms() {
-        Iterable<Room> rooms = this.roomRepository.findAll();
-        List<Room> roomList = new ArrayList<>();
-        rooms.forEach(roomList::add);
-        sortRooms(roomList);
-
-        return roomList;
-    }
-
-    private void sortRooms(List<Room> roomList) {
-        roomList.sort(Comparator.comparing(Room::getRoomNumber));
-    }
-
     private Map<Long, RoomReservation> constructRoomReservationMap(Iterable<Room> rooms) {
         Map<Long, RoomReservation> roomReservationMap = new HashMap();
         rooms.forEach(room -> {

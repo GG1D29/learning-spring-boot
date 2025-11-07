@@ -6,6 +6,7 @@ import com.stanley.xie.learningspringboot.dto.RoomReservation;
 import com.stanley.xie.learningspringboot.model.Room;
 import com.stanley.xie.learningspringboot.service.GuestService;
 import com.stanley.xie.learningspringboot.service.ReservationService;
+import com.stanley.xie.learningspringboot.service.RoomService;
 import com.stanley.xie.learningspringboot.util.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,6 +40,9 @@ class WebserviceControllerTest {
 
     @MockitoBean
     private ReservationService reservationService;
+
+    @MockitoBean
+    private RoomService roomService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -119,7 +123,7 @@ class WebserviceControllerTest {
         roomList.add(room1);
         roomList.add(room2);
 
-        Mockito.when(reservationService.getRooms()).thenReturn(roomList);
+        Mockito.when(roomService.getRooms()).thenReturn(roomList);
 
         mockMvc.perform(get("/api/rooms"))
                 .andDo(print())
