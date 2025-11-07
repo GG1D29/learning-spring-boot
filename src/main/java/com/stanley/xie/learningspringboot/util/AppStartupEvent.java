@@ -1,12 +1,6 @@
 package com.stanley.xie.learningspringboot.util;
 
 import com.stanley.xie.learningspringboot.dto.RoomReservation;
-import com.stanley.xie.learningspringboot.model.Guest;
-import com.stanley.xie.learningspringboot.model.Reservation;
-import com.stanley.xie.learningspringboot.model.Room;
-import com.stanley.xie.learningspringboot.repository.GuestRepository;
-import com.stanley.xie.learningspringboot.repository.ReservationRepository;
-import com.stanley.xie.learningspringboot.repository.RoomRepository;
 import com.stanley.xie.learningspringboot.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
