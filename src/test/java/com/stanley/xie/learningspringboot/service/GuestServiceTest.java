@@ -1,6 +1,7 @@
 package com.stanley.xie.learningspringboot.service;
 
 import com.stanley.xie.learningspringboot.dto.HotelGuest;
+import com.stanley.xie.learningspringboot.exception.GuestNotFoundException;
 import com.stanley.xie.learningspringboot.model.Guest;
 import com.stanley.xie.learningspringboot.repository.GuestRepository;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,5 +64,26 @@ class GuestServiceTest {
         assertThat(capturedGuest.getEmailAddress()).isEqualTo("sh@email.com");
         assertThat(capturedGuest.getPhoneNumber()).isEqualTo("08123456");
 
+    }
+
+    @Test
+    void should_GetGuestById_Successfully() {
+        Guest guest = new Guest();
+        guest.setId(1L);
+        guest.setFirstName("Luna");
+        guest.setLastName("Alvarez");
+
+        Mockito.when(guestRepository.findById(1L)).thenReturn(Optional.of(guest));
+        Guest actual = guestService.getGuestById(1L);
+        assertThat(actual.getId()).isEqualTo(1L);
+        assertThat(actual.getFirstName()).isEqualTo("Luna");
+        assertThat(actual.getLastName()).isEqualTo("Alvarez");
+    }
+
+    @Test
+    void should_Failed_GetGuestById_When_NotFound() {
+
+        Mockito.when(guestRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(GuestNotFoundException.class, () -> guestService.getGuestById(1L));
     }
 }

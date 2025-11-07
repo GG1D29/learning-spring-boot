@@ -1,6 +1,7 @@
 package com.stanley.xie.learningspringboot.service;
 
 import com.stanley.xie.learningspringboot.dto.HotelGuest;
+import com.stanley.xie.learningspringboot.exception.GuestNotFoundException;
 import com.stanley.xie.learningspringboot.model.Guest;
 import com.stanley.xie.learningspringboot.repository.GuestRepository;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,10 @@ public class GuestService {
         sortHotelGuests(hotelGuests);
 
         return hotelGuests;
+    }
+
+    public Guest getGuestById(Long id) {
+        return guestRepository.findById(id).orElseThrow(GuestNotFoundException::new);
     }
 
     public void addHotelGuest(HotelGuest hotelGuest) {

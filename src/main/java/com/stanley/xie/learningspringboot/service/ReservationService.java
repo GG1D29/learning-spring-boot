@@ -17,7 +17,7 @@ import java.util.*;
 public class ReservationService {
 
     private final RoomRepository roomRepository;
-    private final GuestRepository guestRepository;
+    private final GuestService guestService;
     private final ReservationRepository reservationRepository;
 
     public List<RoomReservation> getRoomReservationsForDate(Date date) {
@@ -35,7 +35,7 @@ public class ReservationService {
     }
 
     private Map<Long, RoomReservation> constructRoomReservationMap(Iterable<Room> rooms) {
-        Map<Long, RoomReservation> roomReservationMap = new HashMap();
+        Map<Long, RoomReservation> roomReservationMap = new HashMap<>();
         rooms.forEach(room -> {
             RoomReservation roomReservation = new RoomReservation();
             roomReservation.setRoomId(room.getId());
@@ -51,7 +51,7 @@ public class ReservationService {
         reservations.forEach(reservation -> {
             RoomReservation roomReservation = roomReservationMap.get(reservation.getRoomId());
             roomReservation.setDate(date);
-            Guest guest = this.guestRepository.findById(reservation.getGuestId()).get();
+            Guest guest = this.guestService.getGuestById(reservation.getGuestId());
             roomReservation.setFirstName(guest.getFirstName());
             roomReservation.setLastName(guest.getLastName());
             roomReservation.setGuestId(guest.getId());
